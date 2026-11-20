@@ -1,0 +1,2 @@
+# NOVA
+Simple desktop app

@@ -1,1 +1,69 @@
-<iframe src="https://gn-math.dev" width=1200px height=1800px></iframe>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>NOVA</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    #install-button {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 1000;
+      display: none;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 8px;
+      background: #111;
+      color: #fff;
+      font: 600 14px system-ui, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
+    }
+  </style>
+</head>
+<body>
+  <iframe src="https://gn-math.dev" title="NOVA"></iframe>
+  <button id="install-button" type="button">Install NOVA</button>
+
+  <script src="service-manager.js"></script>
+  <script>
+    const installButton = document.getElementById("install-button");
+
+    function updateInstallButton() {
+      installButton.style.display = window.NOVAServiceManager?.getStatus().installAvailable
+        ? "block"
+        : "none";
+    }
+
+    window.addEventListener("nova:installavailable", updateInstallButton);
+    window.addEventListener("nova:installed", updateInstallButton);
+    window.addEventListener("nova:serviceworkerready", () => {
+      console.log("NOVA service worker ready");
+    });
+
+    installButton.addEventListener("click", async () => {
+      const result = await window.NOVAServiceManager.install();
+      if (result.outcome !== "accepted") updateInstallButton();
+    });
+
+    updateInstallButton();
+  </script>
+</body>
+</html>

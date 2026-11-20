@@ -40,10 +40,9 @@
       window.addEventListener("online", this._boundHandlers.online);
       window.addEventListener("offline", this._boundHandlers.offline);
 
-      if (config.serviceWorkerUrl) {
-        this.registerServiceWorker(config.serviceWorkerUrl, config.serviceWorkerOptions)
-          .catch((error) => this._emit("serviceworkererror", { error }));
-      }
+      const workerUrl = config.serviceWorkerUrl || "service-worker.js";
+      this.registerServiceWorker(workerUrl, config.serviceWorkerOptions)
+        .catch((error) => this._emit("serviceworkererror", { error }));
 
       return this;
     }
